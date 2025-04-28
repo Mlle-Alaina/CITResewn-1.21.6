@@ -1,0 +1,36 @@
+Initialized native services in: /home/ubuntu/.gradle/native
+Initialized jansi services in: /home/ubuntu/.gradle/native
+The client will now receive all logging from the daemon (pid: 5999). The daemon log file: /home/ubuntu/.gradle/daemon/8.12/daemon-5999.out.log
+Starting 6th build in daemon [uptime: 12 mins 57.69 secs, performance: 100%, GC rate: 0.00/s, heap usage: 0% of 2 GiB]
+Using 1 worker leases.
+Now considering [/home/ubuntu/CITResewn-1.21.5] as hierarchies to watch
+Watching the file system is configured to be enabled if available
+File system watching is active
+Starting Build
+Resolved plugin [id: 'fabric-loom', version: '1.10', apply: false]
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Settings file '/home/ubuntu/CITResewn-1.21.5/settings.gradle' line: 16
+
+* What went wrong:
+Plugin [id: 'fabric-loom', version: '1.10', apply: false] was not found in any of the following sources:
+
+- Gradle Core Plugins (not a core plugin. For more available plugins, please refer to https://docs.gradle.org/8.12/userguide/plugin_reference.html in the Gradle documentation.)
+- Included Builds (No included builds contain this plugin)
+- Plugin Repositories (could not resolve plugin artifact 'fabric-loom:fabric-loom.gradle.plugin:1.10')
+  Searched in the following repositories:
+    maven(https://maven.kikugie.dev/releases)
+    maven2(https://maven.kikugie.dev/snapshots)
+    maven3(https://plugins.gradle.org/m2/)
+    Fabric(https://maven.fabricmc.net/)
+    Gradle Central Plugin Repository
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 34s
