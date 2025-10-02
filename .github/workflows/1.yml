@@ -1,0 +1,92 @@
+name: Fabric 1.21.6 CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # 允许手动触发
+
+env:
+  JAVA_VERSION: 21
+  MC_VERSION: 1.21.6
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Project
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Validate Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+      
+    - name: Setup JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'microsoft'
+        
+    - name: Validate Gradle Files
+      run: |
+        chmod +x ./gradlew
+        ./gradlew validateMod
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build Mod
+    needs: validate
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'microsoft'
+        
+    - name: Cache Gradle
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Build Mod
+      run: |
+        chmod +x ./gradlew
+        ./gradlew build --no-daemon
+        
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fabric-1.21.6-Build
+        path: build/libs/*.jar
+        retention-days: 30
+
+  test:
+    runs-on: ubuntu-latest
+    name: Run Tests
+    needs: validate
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'microsoft'
+        
+    - name: Run Tests
+      run: |
+        chmod +x ./gradlew
+        ./gradlew test --no-daemon
